@@ -66,10 +66,13 @@ var Automation = new Class({
     },
 
     send: function(index) {
+    	//console.log('index-->'+index);
+    	//console.log("------"+this.pattern[index]);
         this.instrument.send('/automation', 'sif', this.key, index, this.pattern[index]);
     },
 
     setStep: function(index, value) {
+    	//console.log('inside automation-->'+index+'--'+value);
         this.pattern[index] = value;
     },
 

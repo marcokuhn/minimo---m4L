@@ -17,11 +17,12 @@ var Widget = new Class({
         this.marginBottom = 0;
         this.marginLeft = 0;
         this.marginRight = 0;
-        this.bgColor = '#0E1B1F';
-        this.fgColor = '#4D95AB';
-        this.color1 = "#172C33";
-        this.color2 = "#193038";
-        this.color3 = "#305C6B";
+        this.bgColor = '#393637';
+        this.fgColor = '#db62c6'//;'#0b9dff';
+        this.color1 = "#fb5767";//"#fe263c";
+        this.color2 = "#5eb8f4";//"#0b9dff";
+        this.color3 = "#65bd67";//"#01d106";
+        this.color4 = "#ddb85f";//"#ffb400";
 
 
         this.sizeHint = 1; 

@@ -7,8 +7,8 @@ var Button = new Class({
         this.fontColor = "#fff";
         this.fontName = "Arial";
         this.fontSize = 10;
-        this.fgColor = '#0b9eff';
-        this.bgColor = '#3a3637';
+        this.fgColor = '#0b9dff';
+        this.bgColor = '#393637';
         this.borderWidth = 0;
         this.borderColor = "rgba(255,255,255,1)";
 
@@ -51,6 +51,69 @@ var Button = new Class({
         return true;
     }
 
+});
+
+var SelectionButton = new Class({
+    Extends: Button,
+
+    drawCanvas: function(context) {
+        this.drawBackground(context, this.active ? this.fgColor : this.bgColor);
+        this.drawLabel(context);
+    },
+
+    onTouchDown: function(event) {
+        this.fireEvent('click', this.clip);
+        return true;
+    }
+});
+
+var SelectionSwitcher = new Class({
+    Extends: Widget,
+
+    initialize: function(options) {
+        Widget.prototype.initialize.call(this, options);
+
+        this.active = 0;
+        this.layout = 'horizontal';
+		
+		selections = ['OSC', 'Filter', 'ADSR','FX'];
+		params = [["volume", "pitch", "octave", "detune", "pwidth"],
+		["cutoff", "reso"],
+		["attack", "decay", "sustain", "release"],
+		["reverb", "delay", "dtime", "feedback"]
+		]
+		this.params = params;
+		colors = [this.color1, this.color2, this.color3, this.color4];
+		
+        for (var i = 0; i < 4; i++) {
+            this.add({
+                active: i == 0,
+                type: SelectionButton,
+                fgColor: colors[i],
+                label: selections[i],
+                param: params[i],
+                marginRight: 1,
+                clip: i,
+                on: {
+                    click: this.onButtonClick.bind(this)
+                }
+            });
+        }
+    },
+
+    onButtonClick: function(clip) {
+        this.clip(clip);
+        //console.log('clip-->'+clip);
+        this.instrument.selectionToggle(1, clip, this.params);
+        //this.instrument.send('/clip', 'i', this.active);
+    },
+
+    clip: function(clip) {
+        this.active = clip;
+        this.children.each(function(child, i) {
+            child.active = i == this.active;
+        }, this);
+    }
 });
 
 var ToggleButton = new Class({

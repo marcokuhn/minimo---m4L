@@ -6,8 +6,8 @@ var Instrument = new Class({
 
         this.bpm = 120;
         this.layout = 'vertical';
-
-        this.initMenus();
+        
+        //this.initMenus();
 
         this.clipswitcher = this.add({ 
             type: ClipSwitcher, 
@@ -15,15 +15,28 @@ var Instrument = new Class({
             marginTop: 5,
             instrument: this
         });
-
+        /*
+        this.automationswitcher = this.add({ 
+            type: ClipSwitcher, 
+            sizeHint: 0.5,
+            marginTop: 5,
+            instrument: this
+        });
+		*/
         this.sequencer = this.add({ 
             type: Sequencer, 
             sizeHint: 1,
             marginTop: 5,
             instrument: this 
         });
-
-        this.initButtons();
+		
+        //this.initButtons();
+        this.automationswitcher = this.add({ 
+            type: SelectionSwitcher, 
+            sizeHint: 0.5,
+            marginTop: 5,
+            instrument: this
+        });
         this.initSliders();
     },
 
@@ -33,42 +46,79 @@ var Instrument = new Class({
             sizeHint: 0.5,
             instrument: this 
         });
-
+        
         this.buttons.add({
             type: ToggleButton,
             label: "Osc",
             on: {
-                click: this.toggleGroup.bind(this, ["volume", "pitch", "octave", "detune", "pwidth"])
+                click: this.toggleGroup.bind(this, "Osc", ["volume", "pitch", "octave", "detune", "pwidth"])
             }
+            //console.log(this.buttonContainer);
+            //this.buttonContainer.push(this);
         });
-
+		
         this.buttons.add({
             type: ToggleButton,
             label: "Filter",
             on: {
-                click: this.toggleGroup.bind(this, ["cutoff", "reso"])
+                click: this.toggleGroup.bind(this, "Filter", ["cutoff", "reso"])
             }
+           // this.buttonContainer.push("sdds");
         });
 
         this.buttons.add({
             type: ToggleButton,
             label: "ADSR",
             on: {
-                click: this.toggleGroup.bind(this, ["attack", "decay", "sustain", "release"])
+                click: this.toggleGroup.bind(this, "ADSR", ["attack", "decay", "sustain", "release"])
             }
+            //this.buttonContainer.push(this);
         });
 
         this.buttons.add({
             type: ToggleButton,
             label: "FX",
             on: {
-                click: this.toggleGroup.bind(this, ["reverb", "delay", "dtime", "feedback"])                    
+                click: this.toggleGroup.bind(this, "FX", ["reverb", "delay", "dtime", "feedback"])                    
             }
+            ///this.buttonContainer.push(this);
         });
 
     },
+    
+    selectionToggle: function(state, id, paramList){
+    	//console.log(state+'---------'+paramList);
+    	
+    	for(var i = 0; i < paramList.length; i++){
+    		for(var j = 0; j < paramList[i].length; j++){
+    			var automation = this.getAutomation(paramList[i][j]);
+    			if (id != i){
+    				if (automation)	automation.visible = false;
+            	}else{
+            		if (automation)	automation.visible = true;
+            	}
+    	
+    		}
+    	}
+    	/*
+    	paramList.each(function(selection) {
+    		selection.each(function(key)){
+            	var automation = this.getAutomation(key);
+            	automation.visible = state;
+            }
+        }.bind(this));
+        */
+    },
 
-    toggleGroup: function(keys) {
+    toggleGroup: function(label,keys) {
+    	/*console.log("---"+label);
+    	console.log(this.buttons.length)
+    	for(var i = 0; i < this.buttonContainer.length;i++){
+    		if (this.buttonContainer[i].label != label){	
+    			console.log(this.buttonContainer[i].state)
+    		}
+    	}*/
+    	
         keys.each(function(key) {
             var automation = this.getAutomation(key);
             automation.visible = !automation.visible;
@@ -128,20 +178,20 @@ var Instrument = new Class({
         });
 
         this.addSlider(this.color1, 'volume'    , 0, 1, 0.01);
-        this.addSlider(this.color1, 'octave'    , 0, 6, 1);
-        this.addSlider(this.color1, 'pitch'     , 0, 12, 1);
-        this.addSlider(this.color1, 'detune'    , 0, 0.05, 0.0005);
+        this.addSlider(this.color1, 'octave'    , 0, 1, 0.166666);
+        this.addSlider(this.color1, 'pitch'     , 0, 1, 0.083333333);
+        this.addSlider(this.color1, 'detune'    , 0, 1, 0,01);
         this.addSlider(this.color1, 'pwidth'    , 0, 1, 0.01);
-        this.addSlider(this.color1, 'cutoff'    , 0.1, 1, 0.01);
-        this.addSlider(this.color1, 'reso'      , 1, 5, 0.01);
-        this.addSlider(this.color2, 'attack'    , 0, 1000, 10);
-        this.addSlider(this.color2, 'decay'     , 0, 1000, 10);
-        this.addSlider(this.color2, 'sustain'   , 0, 1, 0.01);
-        this.addSlider(this.color2, 'release'   , 0, 1000, 10);
-        this.addSlider(this.color3, 'reverb'    , 0, 0.5, 0.005);
-        this.addSlider(this.color3, 'delay'     , 0, 1, 0.01);
-        this.addSlider(this.color3, 'dtime'     , 0, 8, 1);
-        this.addSlider(this.color3, 'fback'     , 0, 1, 0.01);
+        this.addSlider(this.color2, 'cutoff'    , 0, 1, 0.01);
+        this.addSlider(this.color2, 'reso'      , 0, 1, 0.01);
+        this.addSlider(this.color3, 'attack'    , 0, 1, 0.01);
+        this.addSlider(this.color3, 'decay'     , 0, 1, 0.01);
+        this.addSlider(this.color3, 'sustain'   , 0, 1, 0.01);
+        this.addSlider(this.color3, 'release'   , 0, 1, 0.01);
+        this.addSlider(this.color4, 'reverb'    , 0, 1, 0.01);
+        this.addSlider(this.color4, 'delay'     , 0, 1, 0.01);
+        this.addSlider(this.color4, 'dtime'     , 0, 1, 0.125);
+        this.addSlider(this.color4, 'fback'     , 0, 1, 0.01);
     },
 
     clock: function(clock, bpm) {
@@ -225,11 +275,13 @@ var Instrument = new Class({
 
     parameter: function(key, value) {
         var slider = this.getSlider(key);
-
+		//console.log('--->value ->'+ value);
         if (slider) slider.value(value);
+        //if (slider) console.log('--->value ->'+ value);
     },
 
     automation: function(key, index, value) {
+    	//console.log('--->auto ->');
         var automation = this.getAutomation(key);
         
         if (automation) {
@@ -238,6 +290,20 @@ var Instrument = new Class({
     },
 
     send: function(address, types) {
+    	
+    	if (address == '/parameter'){
+    		//console.log(address + '---' +  Array.prototype.slice.call(arguments, 2)[0]);
+    		var key = Array.prototype.slice.call(arguments, 2)[0];
+    		var value = Array.prototype.slice.call(arguments, 2)[1];
+    		for (var i = 0; i < 16; i++) {
+        		this.automation(key, i, value);
+        		this.getAutomation(key).send(i);
+        	}
+        	
+        }
+        
+    	
+    	
         this.controller.send({
             instrument: this.index,
             address: address,
@@ -247,7 +313,7 @@ var Instrument = new Class({
     },
 
     receive: function(message) {
-        var action = message.address.slice(1);
+    	var action = message.address.slice(1);
         var fun = this[action];
         //console.log('action =========' + action);
 

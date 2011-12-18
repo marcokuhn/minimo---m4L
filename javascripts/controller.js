@@ -2,7 +2,7 @@ var Controller = new Class({
 
     initialize: function() {
         this.instruments = [];
-        this.numInstruments = 4;
+        this.numInstruments = 2;
 
         this.canvas = document.getElementById('canvas');
 

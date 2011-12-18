@@ -57,6 +57,7 @@ var Slider = new Class({
             this.value(value);
             this.fireEvent("change", this._value);
             this.instrument.send('/parameter', 'sf', this.key, this._value);
+            
         }
     },
 
